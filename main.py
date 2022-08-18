@@ -8,12 +8,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome import service as fs
 
 def driver_init() -> webdriver.Chrome:
+  #CHROMEDRIVER = '/opt/chrome/chromedriver'
+  driver_path = "/app/.chromedriver/bin/chromedriver'"
   options = Options()
   options.add_argument('--headless')  
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
 
-  return webdriver.Chrome(options=options)
+  return webdriver.Chrome(executable_path=driver_path,chrome_options=options)
 
 def main():
   driver = driver_init()

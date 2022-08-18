@@ -1,11 +1,11 @@
+from tkinter import _Cursor
 import psycopg2
-import psycopg2.extras
 from libs import scraping
 from typing import List
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 
-def is_exists_table(cursor:psycopg2.cursor,table_name:str) -> bool:
+def is_exists_table(cursor:_Cursor,table_name:str) -> bool:
     '''
         exists : True
         not exists : False
@@ -20,7 +20,7 @@ def is_exists_table(cursor:psycopg2.cursor,table_name:str) -> bool:
     
     return cursor.fetchone()[0]
 
-def insert_performance_db(conn:psycopg2.connection,cursor:psycopg2.cursor,add_performance:List[map],table_name:str):
+def insert_performance_db(conn:psycopg2.connection,cursor:_Cursor,add_performance:List[map],table_name:str):
     insert_query = "INSERT INTO " + table_name + " values(?,?,?,?,?,?,?,?,?,?,?)"
     
     try:
@@ -30,7 +30,7 @@ def insert_performance_db(conn:psycopg2.connection,cursor:psycopg2.cursor,add_pe
     
     conn.commit()
 
-def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.connection,cursor:psycopg2.cursor,table_name:str):
+def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.connection,cursor:_Cursor,table_name:str):
     create_query = "CREATE TABLE " + table_name
     create_query += ("(subject_name text primary key," #科目名
                     " instructor text,"              #担当教員名

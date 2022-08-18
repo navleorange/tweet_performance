@@ -12,25 +12,25 @@ def is_exists_table(cursor:psycopg2.extensions.cursor,table_name:str) -> bool:
 
     '''
 
-    select_count_query = "select exists(select * from information_schema.tables where table_name=" +  table_name + ")"
+    select_count_query = "select exists(select * from information_schema.tables where table_name=%s)"
     try:
-        cursor.execute(select_count_query)
+        cursor.execute(select_count_query, (table_name,))
     except:
         raise Exception("Error: failed to execute select query")
     
     return cursor.fetchone()[0]
 
-def insert_performance_db(conn:psycopg2.connection,cursor:psycopg2.extensions.cursor,add_performance:List[map],table_name:str):
-    insert_query = "INSERT INTO " + table_name + " values(?,?,?,?,?,?,?,?,?,?,?)"
+def insert_performance_db(conn:psycopg2.extensions.connection,cursor:psycopg2.extensions.cursor,add_performance:List[map],table_name:str):
+    insert_query = "insert into %s values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     
     try:
-        cursor.executemany(insert_query,add_performance)
+        cursor.executemany("insert into %s values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(table_name,add_performance,))
     except:
         raise Exception("Error: failed to insert into table")
     
     conn.commit()
 
-def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.connection,cursor:psycopg2.extensions.cursor,table_name:str):
+def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.extensions.connection,cursor:psycopg2.extensions.cursor,table_name:str):
     create_query = "CREATE TABLE " + table_name
     create_query += ("(subject_name text primary key," #科目名
                     " instructor text,"              #担当教員名
@@ -52,7 +52,7 @@ def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psy
     all_performance = scraping.get_performance_content(driver,wait)
     insert_performance_db(conn,cursor,all_performance,table_name)
 
-def search_new_performance(driver: webdriver.Chrome, wait: WebDriverWait,cursor:psycopg2.cursor,table_name:str) -> List[tuple]:
+def search_new_performance(driver: webdriver.Chrome, wait: WebDriverWait,cursor:psycopg2.extensions.cursor,table_name:str) -> List[tuple]:
     all_performance = scraping.get_performance_content(driver,wait)
 
     new_performance = []

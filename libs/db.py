@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 from libs import scraping
 from typing import List
 from selenium import webdriver

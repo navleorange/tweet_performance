@@ -2,20 +2,22 @@ import libs
 import os
 from dotenv import load_dotenv
 import psycopg2
+import chromedriver_binary
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome import service as fs
 
 def driver_init() -> webdriver.Chrome:
-  CHROMEDRIVER = '/opt/chrome/chromedriver'
-  #CHROME_DRIVER_PATH = '/app/.chromedriver/bin/chromedriver'  #heroku driver path
+  #CHROMEDRIVER = '/opt/chrome/chromedriver'
+  CHROME_DRIVER_PATH = '/app/.chromedriver/bin/chromedriver'  #heroku driver path
   options = Options()
   options.add_argument('--headless')  
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
 
-  chrome_service = fs.Service(executable_path=CHROMEDRIVER) 
+  chrome_service = fs.Service(executable_path=CHROME_DRIVER_PATH) 
 
   return webdriver.Chrome(service=chrome_service, options=options)
 

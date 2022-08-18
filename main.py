@@ -9,13 +9,15 @@ from selenium.webdriver.chrome import service as fs
 
 def driver_init() -> webdriver.Chrome:
   #CHROMEDRIVER = '/opt/chrome/chromedriver'
-  driver_path = "/app/.chromedriver/bin/chromedriver'"
+  CHROME_DRIVER_PATH = '/app/.chromedriver/bin/chromedriver'  #heroku driver path
   options = Options()
   options.add_argument('--headless')  
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
 
-  return webdriver.Chrome(executable_path=driver_path,chrome_options=options)
+  chrome_service = fs.Service(executable_path=CHROME_DRIVER_PATH) 
+
+  return webdriver.Chrome(service=chrome_service, options=options)
 
 def main():
   driver = driver_init()

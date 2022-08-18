@@ -56,4 +56,4 @@ def get_performance_content(driver:webdriver.Chrome,wait:WebDriverWait):
     '''
     elems = fetch_performance(driver,wait)
 
-    return parse_performance(elems)
+    return parse_performance(elems[1:])

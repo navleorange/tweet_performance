@@ -39,5 +39,6 @@ RUN pip install tweepy \
 RUN apt-get update
 
 COPY libs Desktop/libs
+COPY test Desktop/test
 COPY main.py Desktop/.
 COPY .env Desktop/.

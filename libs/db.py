@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 import psycopg2.extensions
 from libs import scraping
 from typing import List
@@ -21,10 +22,21 @@ def is_exists_table(cursor:psycopg2.extensions.cursor,table_name:str) -> bool:
     return cursor.fetchone()[0]
 
 def insert_performance_db(conn:psycopg2.extensions.connection,cursor:psycopg2.extensions.cursor,add_performance:List[map],table_name:str):
-    insert_query = "insert into %s values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    insert_query = ("insert into " + table_name + " (subject_name, "            #科目名
+                                                    " instructor, "             #担当教員名
+                                                    " subject_category, "       #科目区分
+                                                    " selection_category, "     #必修選択区分
+                                                    " credit_num, "             #単位数
+                                                    " evaluation, "             #評価
+                                                    " score ,"                  #得点
+                                                    " subject_GP,"              #科目GP
+                                                    " acquisition_year, "       #取得年度
+                                                    " registered_date, "        #報告日
+                                                    " test_category)")          #試験種別
+    insert_query += " values %s"
     
     try:
-        cursor.executemany("insert into %s values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(table_name,add_performance,))
+        psycopg2.extras.execute_values(cursor,insert_query,add_performance)
     except:
         raise Exception("Error: failed to insert into table")
     
@@ -38,9 +50,9 @@ def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psy
                     " selection_category text,"      #必修選択区分
                     " credit_num integer,"           #単位数
                     " evaluation text,"              #評価
-                    " score real,"                   #得点
-                    " subject_GP real,"              #科目GP
-                    " acquisition_year integer,"     #取得年度
+                    " score text,"                   #得点
+                    " subject_GP text,"              #科目GP
+                    " acquisition_year text,"        #取得年度
                     " registered_date text,"         #報告日
                     " test_category text)")          #試験種別
     

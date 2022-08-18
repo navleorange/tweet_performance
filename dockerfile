@@ -29,6 +29,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # dotenv
 RUN pip install python-dotenv
 
+# db
+RUN pip install psycopg2
+
 RUN pip install tweepy \
  && pip install pprintpp \
  && pip install schedule

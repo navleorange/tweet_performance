@@ -1,28 +1,25 @@
-import sqlite3
+import psycopg2
 from libs import scraping
 from typing import List
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 
-def is_exists_table(cursor:sqlite3.Cursor,table_name:str) -> bool:
+def is_exists_table(cursor:psycopg2.cursor,table_name:str) -> bool:
     '''
         exists : True
         not exists : False
 
     '''
 
-    select_count_query = "SELECT COUNT(*) FROM sqlite_master WHERE TYPE='table' AND NAME='" + table_name + "'"
+    select_count_query = "select exists(select * from information_schema.tables where table_name=" +  table_name + ")"
     try:
         cursor.execute(select_count_query)
     except:
         raise Exception("Error: failed to execute select query")
     
-    if cursor.fetchone()[0] == 1:
-        return True
-    else:
-        return False
+    return cursor.fetchone()[0]
 
-def insert_performance_db(conn:sqlite3.Connection,cursor:sqlite3.Cursor,add_performance:List[map],table_name:str):
+def insert_performance_db(conn:psycopg2.connection,cursor:psycopg2.cursor,add_performance:List[map],table_name:str):
     insert_query = "INSERT INTO " + table_name + " values(?,?,?,?,?,?,?,?,?,?,?)"
     
     try:
@@ -32,7 +29,7 @@ def insert_performance_db(conn:sqlite3.Connection,cursor:sqlite3.Cursor,add_perf
     
     conn.commit()
 
-def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:sqlite3.Connection,cursor:sqlite3.Cursor,table_name:str):
+def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.connection,cursor:psycopg2.cursor,table_name:str):
     create_query = "CREATE TABLE " + table_name
     create_query += ("(subject_name text primary key," #科目名
                     " instructor text,"              #担当教員名
@@ -54,7 +51,7 @@ def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:sql
     all_performance = scraping.get_performance_content(driver,wait)
     insert_performance_db(conn,cursor,all_performance,table_name)
 
-def search_new_performance(driver: webdriver.Chrome, wait: WebDriverWait,cursor:sqlite3.Cursor,table_name:str) -> List[tuple]:
+def search_new_performance(driver: webdriver.Chrome, wait: WebDriverWait,cursor:psycopg2.cursor,table_name:str) -> List[tuple]:
     all_performance = scraping.get_performance_content(driver,wait)
 
     new_performance = []

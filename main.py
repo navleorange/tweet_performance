@@ -1,7 +1,7 @@
 import libs
 import os
 from dotenv import load_dotenv
-import sqlite3
+import psycopg2
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
@@ -32,10 +32,10 @@ def main():
   libs.move_kyoum_page(driver,wait)
   libs.move_performance_page(driver,wait)
 
-  db_name = "perfomance.db"
   table_name = "perfomance"
 
-  conn = sqlite3.connect(db_name)
+  DATABASE_URL = os.environ.get('DATABASE_URL')
+  conn = psycopg2.connect(DATABASE_URL)
   cursor = conn.cursor()
 
   if not libs.is_exists_table(cursor,table_name):

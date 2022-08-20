@@ -8,9 +8,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def is_exists_table(cursor:psycopg2.extensions.cursor,table_name:str) -> bool:
     '''
-        exists : True
-        not exists : False
+        指定したテーブルがDB内に存在するか確認する
 
+        Args:
+            cursor (psycopg2.extensions.cursor): テーブルを操作するオブジェクト
+            table_name (str): データを登録するテーブル名
+
+        Returns:
+            テーブルがある: True
+            テーブルがない: False
+        
+        Raises:
+            クエリの実行に失敗した場合に発生
     '''
 
     select_count_query = "select exists(select * from information_schema.tables where table_name=%s)"
@@ -22,6 +31,19 @@ def is_exists_table(cursor:psycopg2.extensions.cursor,table_name:str) -> bool:
     return cursor.fetchone()[0]
 
 def insert_performance_db(conn:psycopg2.extensions.connection,cursor:psycopg2.extensions.cursor,add_performance:List[map],table_name:str):
+    '''
+        データをテーブルに登録する
+
+        Args:
+            conn (psycopg2.extensions.connection): DBを操作するオブジェクト
+            cursor (psycopg2.extensions.cursor): テーブルを操作するオブジェクト
+            add_performance (List[map]): 追加する成績
+            table_name (str): データを登録するテーブル名
+        
+        Raises:
+            クエリの実行に失敗した場合に発生
+    '''
+
     insert_query = ("insert into " + table_name + " (subject_name, "            #科目名
                                                     " instructor, "             #担当教員名
                                                     " subject_category, "       #科目区分
@@ -43,6 +65,20 @@ def insert_performance_db(conn:psycopg2.extensions.connection,cursor:psycopg2.ex
     conn.commit()
 
 def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psycopg2.extensions.connection,cursor:psycopg2.extensions.cursor,table_name:str):
+    '''
+        テーブルを作成し、成績の登録を行う
+
+        Args:
+            driver (webdriver.Chrome): Chromeブラウザを操作するオブジェクト
+            wait (WebDriverWait): 待機処理をするオブジェクト
+            cursor (psycopg2.extensions.cursor): テーブルを操作するオブジェクト
+            add_performance (List[map]): 追加する成績
+            table_name (str): データを登録するテーブル名
+        
+        Raises:
+            クエリの実行に失敗した場合に発生
+    '''
+
     create_query = "CREATE TABLE " + table_name
     create_query += ("(subject_name text primary key," #科目名
                     " instructor text,"              #担当教員名
@@ -65,6 +101,21 @@ def create_performance_db(driver: webdriver.Chrome, wait: WebDriverWait,conn:psy
     insert_performance_db(conn,cursor,all_performance,table_name)
 
 def search_new_performance(driver: webdriver.Chrome, wait: WebDriverWait,cursor:psycopg2.extensions.cursor,table_name:str) -> List[tuple]:
+    '''
+        成績を取得し、DBと照合して新しく追加された成績を取り出す
+
+        Args:
+            driver (webdriver.Chrome): Chromeブラウザを操作するオブジェクト
+            wait (WebDriverWait): 待機処理をするオブジェクト
+            cursor (psycopg2.extensions.cursor): テーブルを操作するオブジェクト
+            table_name (str): データを登録するテーブル名
+        
+        Returns:
+            List[tuple]: 更新された成績
+        
+        Raises:
+            クエリの実行に失敗した場合に発生
+    '''
     all_performance = scraping.get_performance_content(driver,wait)
 
     new_performance = []

@@ -7,8 +7,20 @@ from selenium.webdriver.remote.webelement import WebElement
 
 def fetch_performance(driver:webdriver.Chrome,wait:WebDriverWait) -> List[WebElement]:
     '''
-    学務から成績のテーブルを取得する
+        成績のページから成績のテーブルを取得する
+
+        Args:
+            driver (webdriver.Chrome): Chromeブラウザを操作するオブジェクト
+            wait (WebDriverWait): 待機処理をするオブジェクト
+        
+        Returns:
+            List[WebElement]: 成績のテーブル
+        
+        Raises:
+            1つ目: 成績ページの読み込みに失敗した場合
+            2つ目: 成績取得のクエリ実行に失敗した場合
     '''
+
     performance_button_script = "dbLinkClick('/kyoumu/seisekiSearchStudentInit.do;jsessionid=Hq2eJECpWtakzJdOrsU7imy1glBMDax0qy04cJF3?mainMenuCode=008&parentMenuCode=007');"
     driver.execute_script(performance_button_script)
 
@@ -27,6 +39,19 @@ def fetch_performance(driver:webdriver.Chrome,wait:WebDriverWait) -> List[WebEle
     return elems
 
 def parse_performance(elems:List[WebElement]):
+    '''
+        成績テーブルから1つ1つの成績を取り出す
+
+        Args:
+            List[WebElement]: 成績のテーブル
+        
+        Returns:
+            List[tuple]: 1つ1つに分けられた成績
+        
+        Raises:
+            成績テーブルから成績の取り出しに失敗したときに発生する
+
+    '''
 
     all_result = []
 
@@ -52,7 +77,18 @@ def parse_performance(elems:List[WebElement]):
 
 def get_performance_content(driver:webdriver.Chrome,wait:WebDriverWait):
     '''
-    学務からテーブルを取得し、それを1つ1つの成績に分割して返す
+        学務から1成績のテーブルを取得し、それを1つ1つの成績に分割して返す一連の処理をする
+
+        Args:
+            driver (webdriver.Chrome): Chromeブラウザを操作するオブジェクト
+            wait (WebDriverWait): 待機処理をするオブジェクト      
+        
+        Returns:
+            List[tuple]: 1つ1つに分けられた成績
+        
+        Note:
+            テーブルの一行目は列名のため除外して返す
+    
     '''
     elems = fetch_performance(driver,wait)
 

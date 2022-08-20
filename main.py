@@ -8,6 +8,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome import service as fs
 
 def driver_init() -> webdriver.Chrome:
+  '''
+    Webブラウザを操作するためのWebDriveの設定を行う
+
+    Returns:
+      webdriver.Chrome: 設定をしたdriverを返す
+    
+    Note:
+      CHROMEDRIVER: ローカルでchromedriverを使用する場合に使用
+      CHROME_DRIVER_PATH: herokuでchromedriverを使用する場合のパス
+  '''
   #CHROMEDRIVER = '/opt/chrome/chromedriver'
   CHROME_DRIVER_PATH = '/app/.chromedriver/bin/chromedriver'  #heroku driver path
   options = Options()
@@ -20,6 +30,12 @@ def driver_init() -> webdriver.Chrome:
   return webdriver.Chrome(service=chrome_service, options=options)
 
 def main():
+  '''
+    学務情報システムから成績を読み込み、DBに存在しない場合はツイートして登録する
+
+    Note:
+      envファイルの設定が必要
+  '''
   driver = driver_init()
 
   # time out 10s

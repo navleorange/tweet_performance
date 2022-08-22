@@ -7,9 +7,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome import service as fs
 
-from libs import tweet
-from libs import slack
-
 def driver_init() -> webdriver.Chrome:
   '''
     Webブラウザを操作するためのWebDriveの設定を行う

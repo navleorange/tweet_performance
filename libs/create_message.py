@@ -15,7 +15,7 @@ def create_performance_message(new_performance:List[map]) -> str:
     get_time = str(datetime.datetime.now())
     get_time = get_time[:str(datetime.datetime.now()).find(".")]
     get_time = get_time.replace(" ","  ")
-    message = "------------------自動更新------------------\n"
+    message = "----------自動更新----------\n"
     message += "取得時間：" + get_time + "\n"
     message += "以下の教科の成績が更新されました\n"
 

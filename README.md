@@ -1,1 +1,2 @@
-# tweet_performance
+# tweet-performance
+静岡大学学務情報システムから成績を取得し、新しく追加された成績をTwiter,Slackで通知するプログラムです。

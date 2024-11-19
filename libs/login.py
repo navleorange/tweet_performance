@@ -114,7 +114,7 @@ def move_kyoum_page(driver:webdriver.Chrome,wait:WebDriverWait):
     
     KYOUM_URL = "https://gakujo.shizuoka.ac.jp/kyoumu/sso/loginStudent.do"
 
-    kyoum_button_script = "systemCooperationOpenWin('/home/systemCooperationLink/initializeShibboleth?renkeiType=kyoumu', 'kyoumuWindow');"
+    kyoum_button_script = "systemCooperationOpenWin('/home/systemCooperationLink/initializeShibboleth', 'kyoumuWindow');"
     try:
         driver.execute_script(kyoum_button_script)
     except:
@@ -149,7 +149,7 @@ def move_performance_page(driver:webdriver.Chrome,wait:WebDriverWait):
             成績ページへの遷移ボタンを押したときのイベントの実行に失敗した場合に発生
     '''
 
-    performance_button_script = "dbLinkClick('/kyoumu/seisekiSearchStudentInit.do;jsessionid=Hq2eJECpWtakzJdOrsU7imy1glBMDax0qy04cJF3?mainMenuCode=008&parentMenuCode=007');"
+    performance_button_script = "dbLinkClick('/kyoumu/seisekiSearchStudentInit.do;');"
     
     try:
         driver.execute_script(performance_button_script)
